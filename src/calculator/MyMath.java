@@ -87,10 +87,10 @@ public class MyMath{
 			int indexE = s.indexOf("E"),
 				dot=s.indexOf(".");
 			if(indexE==-1) {
-				s = ""+Math.round(Double.parseDouble(s)*Math.pow(10,16-dot))/Math.pow(10,16-dot);
+				s = ""+Math.round(Double.parseDouble(s)*Math.pow(10,15-dot))/Math.pow(10,15-dot);
 			}
 			else {
-				s = ""+Math.round(Double.parseDouble(s.substring(0,indexE))*Math.pow(10,15))/Math.pow(10,15)+s.substring(indexE);
+				s = ""+Math.round(Double.parseDouble(s.substring(0,indexE))*Math.pow(10,14))/Math.pow(10,14)+s.substring(indexE);
 			}
 		}
 		return s;
