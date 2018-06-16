@@ -3,21 +3,41 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Calculator extends Frame{
-
 	Calculator(){
 		super();
-		CalculatorUI ui = new CalculatorUI();
-		setLayout(new BorderLayout());
+		
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(600, 800);
+		this.setBackground(Color.black);
+		setSize(1000, 600);
 		setLocation((d.width-getWidth())/2, (d.height-getHeight())/2);
 		setTitle("CBB105028's calculator!!");
-		add(ui.showLabel,BorderLayout.NORTH);
-		add(ui,BorderLayout.CENTER);
+		setLayout(new BorderLayout());
+		CalculatorUI ui = new CalculatorUI();
+		
+		BorderLayout b = new BorderLayout();
+		b.setVgap(20);
+		Panel mainP = new Panel();
+		mainP.setLayout(b);
+		mainP.add(ui.showLabel,BorderLayout.NORTH);
+		mainP.add(ui,BorderLayout.CENTER);
+		add(mainP,BorderLayout.CENTER);
+		
+		Panel rightP = new Panel();
+		rightP.setLayout(new BorderLayout());
+		Label topic= new Label("Record",Label.CENTER);
+		topic.setBackground(Color.BLACK);
+		topic.setForeground(Color.WHITE);
+		topic.setFont(new Font("標楷體", Font.BOLD, 40));
+		rightP.add(ui.clearButton, BorderLayout.SOUTH);
+		rightP.add(topic,BorderLayout.NORTH);
+		rightP.add(ui.tf,BorderLayout.CENTER);
+		add(rightP,BorderLayout.EAST);
+		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) 
 			{System.exit(0);}
 		});
+		
 		setVisible(true);
 	}
 }

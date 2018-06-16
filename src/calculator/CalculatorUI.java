@@ -6,46 +6,64 @@ import java.awt.event.*;
 
 public class CalculatorUI extends Panel{
 	Label showLabel;
+	TextArea tf;
+	Button clearButton;
 	Button[] numButton;
-	public static String[] buttonStr = 
-		{"e","(",")","AC","¡ö",
-		 "£k","7","8","9","¡Ò",
-		 "^","4","5","6","¡Ñ",
-		 "¡Ó","1","2","3","-",
+	String[] buttonStr = 
+		{"e","(",")","AC","Del",
+		 "Ï€","7","8","9","Ã·",
+		 "^","4","5","6","Ã—",
+		 "Â±","1","2","3","-",
 		 " ","0",".","=","+"};
 	CalculatorUI(){
 		super();
-		setLayout(new GridLayout(5,5));
+		GridLayout g = new GridLayout(5,5);
+		g.setVgap(20);	g.setHgap(20);
+		setLayout(g);
 		showLabel = new Label("0",Label.RIGHT);
-		showLabel.setFont(new Font("¼Ð·¢Åé", Font.BOLD, 40));
+		showLabel.setFont(new Font("æ¨™æ¥·é«”", Font.BOLD, 40));
 		showLabel.setBackground(Color.decode("0xD0D0D0"));
+		tf = new TextArea("",20,20,TextArea.SCROLLBARS_BOTH);
+		tf.setFont(new Font("æ¨™æ¥·é«”", Font.PLAIN, 30));
+		tf.setBackground(Color.decode("0xfff5cb"));
+		tf.setEditable(false);
 		numButton = new Button[buttonStr.length];
 		for(int i=0;i<buttonStr.length;i++) {
 			numButton[i] = new Button(buttonStr[i]);
-			numButton[i].setFont(new Font("¼Ð·¢Åé", Font.BOLD, 64));
+			numButton[i].setFont(new Font("æ¨™æ¥·é«”", Font.PLAIN, 50));
 			numButton[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {CalculatorUI.this.showNum(e);}});
 			add(numButton[i]);
 		}
+		
+		clearButton = new Button("Clear");
+		clearButton.setFont(new Font("æ¨™æ¥·é«”", Font.PLAIN, 30));
+		clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {CalculatorUI.this.tf.setText("");}});
 		setColor(1);
 	}
 	void showNum(ActionEvent e) {
-    	String s = e.getSource().toString(),
+		Button b = (Button)(e.getSource());
+    	String s = b.getLabel(),
     		   t = showLabel.getText(),
     		   temp;
-    	s = s.substring(s.lastIndexOf('=')+1,s.length()-1);
-    	s = s.equals("")?"=":s;
     	if(s.equals("=")) {
+    		t = MyMath.check(t);
     		temp = MyMath.count(t);
+    		if(!t.equals(temp))
+    			tf.setText(tf.getText()+t+"\n= "+temp+"\n\n");
     	}
     	else if(s.equals(" ")) {
     		setColor(0);
     		return;
     	}
-    	else if(s.equals("¡Ó")) {
+    	else if(s.equals("Â±")) {
+    		t = MyMath.check(t);
     		temp = MyMath.sign(MyMath.count(t));
+    		if(!t.equals(temp))
+    			tf.setText(tf.getText()+"-("+t+")\n= "+temp+"\n\n");
     	}
-    	else if(s.equals("¡ö")) {
+    	else if(s.equals("Del")) {
     		temp = t.substring(0,t.length()-1);
     		temp = (temp.equals("")||temp.equals("Infinit")||temp.equals("-Infinit"))?"0":temp;
     	}
@@ -58,30 +76,26 @@ public class CalculatorUI extends Panel{
     	showLabel.setText(temp);
 	}
 	void setColor(int mode) {
-		String[][] buttonColor = {{"0x1e90ff","0xed9121","0xff0000","0xf0e68c","0x000000","0x808069"}};
+		String[] buttonColor = {"0x1e90ff","0xed9121","0xff0000","0xf0e68c","0xffffff","0x808069"};
 		Random ran = new Random();
 		if(mode!=1) {
 			for(int i=0;i<6;i++) {
-				int x = 6;
 				String c="0x";
-				while(x--!=0) c+=Integer.toHexString(ran.nextInt(16));
-				buttonColor[0][i]=c;
+				for(int x=6;x!=0;x--) c+=Integer.toHexString(ran.nextInt(16));
+				buttonColor[i]=c;
 			}
 		}
-		for(int i=0;i<buttonStr.length;i++) {
-			char c = buttonStr[i].charAt(0);
-			if((c>='0'&&c<='9')||c=='.')
-				numButton[i].setBackground(Color.decode(buttonColor[0][0]));
-			else if(c=='=')
-				numButton[i].setBackground(Color.decode(buttonColor[0][1]));
-			else if(c=='A'||c=='¡ö')
-				numButton[i].setBackground(Color.decode(buttonColor[0][2]));
-			else if(c=='+'||c=='-'||c=='¡Ñ'||c=='¡Ò')
-				numButton[i].setBackground(Color.decode(buttonColor[0][3]));
-			else if(c==' ')
-				numButton[i].setBackground(Color.decode(buttonColor[0][4]));
-			else
-				numButton[i].setBackground(Color.decode(buttonColor[0][5]));
+		for(Button b: numButton) {
+			int i;
+			char c = b.getLabel().charAt(0);
+			if((c>='0'&&c<='9')||c=='.') i=0;
+			else if(c=='=') i=1;
+			else if(c=='A'||c=='D') i=2;
+			else if(c=='+'||c=='-'||c=='Ã·'||c=='Ã—') i=3;
+			else if(c==' ') i=4;
+			else i=5;
+			b.setBackground(Color.decode(buttonColor[i]));
 		}
+		
 	}
 }
