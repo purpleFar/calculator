@@ -40,6 +40,9 @@ public class MyMath{
 		if(s.equals("e"))	return Math.E;
 		if(s.equals("-π"))	return -Math.PI;
 		if(s.equals("-e"))	return -Math.E;
+		if(s.charAt(s.length()-1)==')')
+			if(s.charAt(0)=='-') return -number(s.substring(2,s.length()-1));
+			else return number(s.substring(1,s.length()-1));
 		try{
 			return Double.parseDouble(s);
 		}catch(NumberFormatException e){System.out.println(s+"浮點數轉換錯誤");}

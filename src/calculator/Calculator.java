@@ -2,6 +2,9 @@ package calculator;
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.swing.*;
+import javax.swing.border.*;
+
 public class Calculator extends Frame{
 	Calculator(){
 		super();
@@ -16,8 +19,10 @@ public class Calculator extends Frame{
 		
 		BorderLayout b = new BorderLayout();
 		b.setVgap(20);
-		Panel mainP = new Panel();
+		JPanel mainP = new JPanel();
 		mainP.setLayout(b);
+		mainP.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+		mainP.setBackground(Color.black);
 		mainP.add(ui.showLabel,BorderLayout.NORTH);
 		mainP.add(ui,BorderLayout.CENTER);
 		add(mainP,BorderLayout.CENTER);

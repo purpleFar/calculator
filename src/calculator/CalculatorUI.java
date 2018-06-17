@@ -22,10 +22,11 @@ public class CalculatorUI extends Panel{
 		setLayout(g);
 		showLabel = new Label("0",Label.RIGHT);
 		showLabel.setFont(new Font("標楷體", Font.BOLD, 40));
-		showLabel.setBackground(Color.decode("0xD0D0D0"));
+		showLabel.setBackground(Color.decode("0xffffff"));
 		tf = new TextArea("",20,20,TextArea.SCROLLBARS_BOTH);
 		tf.setFont(new Font("標楷體", Font.PLAIN, 30));
 		tf.setBackground(Color.decode("0xfff5cb"));
+		tf.setFocusable(false);
 		tf.setEditable(false);
 		numButton = new Button[buttonStr.length];
 		for(int i=0;i<buttonStr.length;i++) {
@@ -38,8 +39,21 @@ public class CalculatorUI extends Panel{
 		
 		clearButton = new Button("Clear");
 		clearButton.setFont(new Font("標楷體", Font.PLAIN, 30));
+		clearButton.setBackground(Color.gray);
 		clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {CalculatorUI.this.tf.setText("");}});
+		
+		tf.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(tf.getText().length()==0)	return;
+				int index = tf.getCaretPosition();
+				String s = tf.getText();
+				String line = s.substring(s.substring(0,index).lastIndexOf('\n')+1,s.indexOf('\n', index));
+		        if(line.indexOf('~')!=-1)	return;
+		        else if(line.indexOf('=')!=-1)	showLabel.setText(line.substring(2));
+		        else showLabel.setText(line);
+		    }
+		});
 		setColor(1);
 	}
 	void showNum(ActionEvent e) {
@@ -50,8 +64,10 @@ public class CalculatorUI extends Panel{
     	if(s.equals("=")) {
     		t = MyMath.check(t);
     		temp = MyMath.count(t);
-    		if(!t.equals(temp))
-    			tf.setText(tf.getText()+t+"\n= "+temp+"\n\n");
+    		if(!t.equals(temp)) {
+    			tf.setText(tf.getText()+t+"\n= "+temp+"\n~~~~~~~~~~~~~~~\n");
+    			tf.setCaretPosition(tf.getText().length());
+    		}
     	}
     	else if(s.equals(" ")) {
     		setColor(0);
@@ -60,8 +76,10 @@ public class CalculatorUI extends Panel{
     	else if(s.equals("±")) {
     		t = MyMath.check(t);
     		temp = MyMath.sign(MyMath.count(t));
-    		if(!t.equals(temp))
-    			tf.setText(tf.getText()+"-("+t+")\n= "+temp+"\n\n");
+    		if(!t.equals(temp)) {
+    			tf.setText(tf.getText()+"-("+t+")\n= "+temp+"\n~~~~~~~~~~~~~~~\n");
+    			tf.setCaretPosition(tf.getText().length());
+    		}
     	}
     	else if(s.equals("Del")) {
     		temp = t.substring(0,t.length()-1);
